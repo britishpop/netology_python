@@ -1,4 +1,5 @@
 import requests
+from pprint import pprint
 
 
 class Animal:
@@ -23,7 +24,8 @@ class Bird(Animal):
 
 
 class Cow(Even_toed):
-    production = ["milk", "meat"]
+    def __init__(self):
+        self.production = ["milk", "meat"]
 
 
 class Goat(Even_toed):
@@ -51,4 +53,12 @@ class Goose(Bird):
 
 
 jeffrey = Goose()
-print(jeffrey.feathers)
+
+big_cow = Cow()
+
+small_cow = Cow()
+
+big_cow.production.append("calves")
+
+print("Big cow: ", big_cow.production)
+print("Small cow: ", small_cow.production)
