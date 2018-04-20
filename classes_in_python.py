@@ -3,24 +3,27 @@ from pprint import pprint
 
 
 class Animal:
-    obey_humans = True
-    live_on_farm = True
-    legs = None
-    mouth = None
-    production = None
+    def __init__(self):
+        self.obey_humans = True
+        self.live_on_farm = True
+        self.legs = None
+        self.mouth = None
+        self.production = None
 
 
 class Even_toed(Animal):
-    fur = True
-    mouth = "lips"
-    legs = 4
+    def __init__(self):
+        self.fur = True
+        self.mouth = "lips"
+        self.legs = 4
 
 
 class Bird(Animal):
-    feathers = True
-    mouth = "beak"
-    legs = 2
-    wings = 2
+    def __init__(self):
+        self.feathers = True
+        self.mouth = "beak"
+        self.legs = 2
+        self.wings = 2
 
 
 class Cow(Even_toed):
@@ -29,27 +32,33 @@ class Cow(Even_toed):
 
 
 class Goat(Even_toed):
-    production = ["milk", "meat"]
+    def __init__(self):
+        self.production = ["milk", "meat"]
 
 
 class Sheep(Even_toed):
-    production = ["fur", "meat"]
+    def __init__(self):
+        self.production = ["fur", "meat"]
 
 
 class Pig(Even_toed):
-    production = ["meat"]
+    def __init__(self):
+        self.production = ["meat"]
 
 
 class Duck(Bird):
-    production = ["meat"]
+    def __init__(self):
+        self.production = ["meat"]
 
 
 class Chick(Bird):
-    production = ["eggs", "meat"]
+    def __init__(self):
+        self.production = ["eggs", "meat"]
 
 
 class Goose(Bird):
-    production = ["meat"]
+    def __init__(self):
+        self.production = ["meat"]
 
 
 jeffrey = Goose()
