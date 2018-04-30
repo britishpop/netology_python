@@ -2,7 +2,7 @@ def get_shop_list_by_dishes(dishes, person_count):
     cook_book = get_cook_book()
     shop_list = {}
     for dish in dishes:
-        if dish in cook_book.keys():
+        if dish in cook_book:
             for ingredient in cook_book[dish]:
                 new_shop_list_item = dict(ingredient)
                 new_shop_list_item['quantity'] *= person_count
@@ -25,10 +25,11 @@ def get_cook_book():
             while counter < ingredients_count:
                 counter += 1
                 single_ingredient = list(f.readline().strip().split(" | "))
-                ingredients.append(dict(ingredient_name=single_ingredient[0], quantity=int(single_ingredient[1]), measure=single_ingredient[2]))
+                ingredients.append(dict(ingredient_name=single_ingredient[0], quantity=int(single_ingredient[1]),
+                                        measure=single_ingredient[2]))
             f.readline()
             cook_book[line.strip().lower()] = ingredients
-    return(cook_book)
+    return cook_book
 
 
 
