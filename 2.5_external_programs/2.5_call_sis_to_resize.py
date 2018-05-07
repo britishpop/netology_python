@@ -5,10 +5,12 @@ import subprocess
 def resize():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     ensure_dir(current_dir)
-    for picture in os.listdir(os.path.join(current_dir, "test")):
+    for picture in os.listdir(os.path.join(current_dir, "source")):
+        subprocess.call("cp {} {}".format(os.path.join(current_dir, picture), os.path.join(current_dir, "result",
+                                                                                           picture)))
+    for picture in os.listdir(os.path.join(current_dir, "result")):
         if picture.endswith(".jpg"):
-            print(picture)
-            subprocess.call(["sips", "-z 200", picture, os.path.join(current_dir, "result")])
+            subprocess.call(["sips", "--resampleWidth", "200", os.path.join(current_dir, "result", picture)])
         else:
             print("{} это не картинка".format(picture))
 
