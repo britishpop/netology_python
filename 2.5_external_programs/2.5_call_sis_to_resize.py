@@ -8,7 +8,7 @@ def resize():
     for picture in os.listdir(os.path.join(current_dir, "test")):
         if picture.endswith(".jpg"):
             print(picture)
-            subprocess.call(["sips", "-z 200", "picture" "cp currentdir/result"])
+            subprocess.call(["sips", "-z 200", picture, os.path.join(current_dir, "result")])
         else:
             print("{} это не картинка".format(picture))
 
