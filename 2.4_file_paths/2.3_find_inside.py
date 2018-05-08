@@ -10,8 +10,8 @@ def main():
         found_keys = find_keys(answer, search_memory)
         if len(found_keys) > 1:
             print("Вот в этих файлах есть {}:".format(answer))
-            for i, single_key in enumerate(found_keys):
-                print(i + 1, single_key)
+            for i, single_key in enumerate(found_keys, 1):
+                print(i, single_key)
             search_memory = found_keys
         elif len(found_keys) == 1:
             print("Нашелся всего один файл, содержащий {}".format(answer))
@@ -22,7 +22,7 @@ def main():
 def find_keys(answer, search_memory):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     iteration_list = []
-    if len(search_memory) is 0:
+    if not search_memory:
         for listed_file in os.listdir(os.path.join(current_dir, "migrations")):
             if listed_file.endswith(".sql"):
                 with open(os.path.join(current_dir, "migrations", listed_file)) as f:
