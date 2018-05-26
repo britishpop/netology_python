@@ -26,25 +26,58 @@ class YaMetrikaShow:
         return {"Authorization": "OAuth {}".format(self.token)}
 
     def counters(self):
-        counters_list = requests.get(
+        counters_info = requests.get(
             MANAGE_URL,
             headers=self.authorize()
         )
-        return counters_list.json()
+        counters_list = [x["id"] for x in counters_info.json()["counters"]]
+        return counters_list
 
     def visits(self):
-        params = dict(
-
-        )
-        requests.get("?".join(STAT_URL, params))
-        pass
+        for counter in test_user.counters():
+            params = dict(ids=counter,metrics="ym:s:visits")
+            visits_counter = requests.get(
+                "?".join((STAT_URL, urlencode(params))),
+                headers=self.authorize())
+            return visits_counter.json()
 
     def showings(self):
-        pass
+        for counter in test_user.counters():
+            params = dict(ids=counter,metrics="ym:s:pageviews")
+            showings_counter = requests.get(
+            "?".join((STAT_URL, urlencode(params))),
+            headers=self.authorize())
+        return showings_counter.json()
 
     def visitors(self):
-        pass
+        for counter in test_user.counters():
+            params = dict(ids=counter,metrics="ym:s:users")
+            visitors_counter = requests.get(
+            "?".join((STAT_URL, urlencode(params))),
+            headers=self.authorize())
+        return visitors_counter.json()
 
 test_user = YaMetrikaShow(ACC_TOKEN)
 
-pprint(test_user.counters())
+def main():
+    answer = ""
+    while "q" not in answer.lower():
+        answer = input("\nПривет! Давайте посмотрим на результаты метрик.\n"
+                       "Введите, какую метрику вы хотите увидеть?\n"
+                       "Доступные метрики:\n"
+                       "'visits' - посещения\n"
+                       "'showings' - просмотры\n"
+                       "'visitors' - показы\n"
+                       "Вся информация собирается с сайта https://britishpop."
+                       "github.io/\n")
+        if answer.lower() == "visits":
+            print("\nКоличество посещений за последнюю неделю: ",
+                  round(test_user.visits()["data"][0]["metrics"][0]))
+        elif answer.lower() == "showings":
+            print("\nКоличество просмотров за последнюю неделю: ",
+                  round(test_user.showings()["data"][0]["metrics"][0]))
+        elif answer.lower() == "visitors":
+            print("\nКоличество посетителей за последнюю неделю: ",
+                  round(test_user.visitors()["data"][0]["metrics"][0]))
+
+main()
