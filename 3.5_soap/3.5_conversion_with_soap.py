@@ -14,23 +14,23 @@ def median_temp():
     templist = []
     for day_temp in data:
         templist.append(int(day_temp.strip(" F\n")))
-    median = sum(templist)/len(templist)
-    return median
+    median = temperature_conversion("c", round(sum(templist)/len(templist)))
+    return int(median[1])
 
 
 def temperature_conversion(target_scale, input_temperature):
     client = Client("https://www.w3schools.com/xml/tempconvert.asmx?WSDL")
     if target_scale == "c":
+        conversion = client.service.FahrenheitToCelsius(input_temperature)
         result = "\n{} по Фаренгейту это {} по Цельсию\n"\
-        .format(input_temperature,
-                client.service.FahrenheitToCelsius(input_temperature))
+        .format(input_temperature, conversion)
     elif target_scale == "f":
+        conversion = client.service.CelsiusToFahrenheit(input_temperature)
         result = "\n{} по Цельсию это {} по Фаренгейту\n"\
-        .format(input_temperature,
-                client.service.CelsiusToFahrenheit(input_temperature))
+        .format(input_temperature, conversion)
     else:
         result = "Что-то пошло не так, попробуйте еще раз"
-    return result
+    return [result, round(float(conversion))]
 
 
 def temperature_file():
@@ -57,9 +57,9 @@ if __name__ == "__main__":
                                 " Фаренгейту или в градусы по Цельсию\n"
                                 "Введите 'f' (celsius->fahrenheit) или 'c' (fah"
                                 "renheit->celsius)\n")
-            print(temperature_conversion(target_scale, input_temperature))
+            print(temperature_conversion(target_scale, input_temperature)[0])
         elif answer == "file":
-            median_temp()
+            print("Средняя температура за неделю - {} градусов по цельсию".format(median_temp()))
         elif answer == "travel":
             pass
         else:
