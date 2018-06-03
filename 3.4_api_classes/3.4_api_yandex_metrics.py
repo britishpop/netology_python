@@ -59,7 +59,7 @@ class YaMetrikaShow:
 
 test_user = YaMetrikaShow(ACC_TOKEN)
 
-def main():
+if __name__ == "__main__":
     answer = ""
     while "q" not in answer.lower():
         answer = input("\nПривет! Давайте посмотрим на результаты метрик.\n"
@@ -79,5 +79,3 @@ def main():
         elif answer.lower() == "visitors":
             print("\nКоличество посетителей за последнюю неделю: ",
                   round(test_user.visitors()["data"][0]["metrics"][0]))
-
-main()
