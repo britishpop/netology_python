@@ -1,6 +1,7 @@
 from zeep import Client
 import os
 
+
 def open_file(filename):
     file = []
     with open(os.path.join("input_files", filename)) as f:
@@ -33,8 +34,21 @@ def temperature_conversion(target_scale, input_temperature):
     return [result, round(float(conversion))]
 
 
-def temperature_file():
-    pass
+def travel_plan():
+    client = Client("http://fx.currencysystem.com/webservices/CurrencyServer4"
+                    ".asmx?WSDL")
+    flights_sum = 0
+    with open(os.path.join("input_files", "currencies.txt")) as f:
+        for line in f:
+            from_currency = line.split(":")[1].split()[1]
+            amount_currency = int(line.split(":")[1].split()[0])
+            flights_sum += client.service.ConvertToNum(
+                                                        fromCurrency=from_currency,
+                                                        toCurrency="RUB",
+                                                        amount=amount_currency,
+                                                        rounding=True
+                                                    )
+        return flights_sum
 
 
 if __name__ == "__main__":
@@ -59,8 +73,10 @@ if __name__ == "__main__":
                                 "renheit->celsius)\n")
             print(temperature_conversion(target_scale, input_temperature)[0])
         elif answer == "file":
-            print("Средняя температура за неделю - {} градусов по цельсию".format(median_temp()))
+            print("\nСредняя температура за неделю - {} градусов по цельсию".\
+                  format(median_temp()))
         elif answer == "travel":
-            pass
+            print("\nОбщая стоимость путешествия - {} рублей".\
+                  format(travel_plan()))
         else:
             continue
