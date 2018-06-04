@@ -34,7 +34,7 @@ class YaMetrikaShow:
         return counters_list
 
     def visits(self):
-        for counter in test_user.counters():
+        for counter in self.counters():
             params = dict(ids=counter,metrics="ym:s:visits")
             visits_counter = requests.get(
                 "?".join((STAT_URL, urlencode(params))),
@@ -42,7 +42,7 @@ class YaMetrikaShow:
             return visits_counter.json()
 
     def showings(self):
-        for counter in test_user.counters():
+        for counter in self.counters():
             params = dict(ids=counter,metrics="ym:s:pageviews")
             showings_counter = requests.get(
             "?".join((STAT_URL, urlencode(params))),
@@ -50,14 +50,16 @@ class YaMetrikaShow:
         return showings_counter.json()
 
     def visitors(self):
-        for counter in test_user.counters():
+        for counter in self.counters():
             params = dict(ids=counter,metrics="ym:s:users")
             visitors_counter = requests.get(
             "?".join((STAT_URL, urlencode(params))),
             headers=self.authorize())
         return visitors_counter.json()
 
+
 test_user = YaMetrikaShow(ACC_TOKEN)
+
 
 if __name__ == "__main__":
     answer = ""
