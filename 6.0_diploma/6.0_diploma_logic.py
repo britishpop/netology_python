@@ -26,14 +26,8 @@ import json
 
 from pprint import pprint
 
-from diploma_data import ACC_TOKEN, TARGET_VK
+from diploma_data import ACC_TOKEN, TARGET_VK, test_set
 
-
-test_set = set([33938434, 24112387, 53280908, 9624588, 15010187, 130785301,
-               124123414, 22440983, 23750039, 47855390, 75185191, 32174764,
-                40599470, 28140719, 72326580, 23391543, 16984508, 92307020,
-                 30786903, 45491419, 41960539, 41783644, 25205856, 92337511,
-                  1210474, 18133228, 22898541, 98748657])
 
 def get_user_communities(token, vkid):
     print("Запрос списка сообществ пользователя {}".format(vkid))
@@ -50,15 +44,14 @@ def get_user_communities(token, vkid):
 
 
 def get_community_info(token, *args):
-    print(args)
     print("Запрос информации об уникальных сообществах")
-    community_info = requests.get(
-        "https://api.vk.com/method/groups.get",
+    communities_info = requests.get(
+        "https://api.vk.com/method/groups.getById",
         params=dict(
             access_token=token,
             v="5.75",
-            group_ids=args,
-            fields="id, name, members_count"
+            group_ids="{}".format(args),
+            fields="members_count"
         )
     )
     return communities_info.json()
