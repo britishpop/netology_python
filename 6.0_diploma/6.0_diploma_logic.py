@@ -94,14 +94,17 @@ def compare_communities(token, vkid):
 
 def prepare_data(communities_info):
     output_communities_info = {"unique_communities":[]}
-    for one_community_info in communities_info["response"]:
-        del one_community_info["is_closed"]
-        del one_community_info["photo_50"]
-        del one_community_info["photo_100"]
-        del one_community_info["photo_200"]
-        del one_community_info["screen_name"]
-        del one_community_info["type"]
-        output_communities_info["unique_communities"].append(one_community_info)
+    try:
+        for one_community_info in communities_info["response"]:
+            del one_community_info["is_closed"]
+            del one_community_info["photo_50"]
+            del one_community_info["photo_100"]
+            del one_community_info["photo_200"]
+            del one_community_info["screen_name"]
+            del one_community_info["type"]
+            output_communities_info["unique_communities"].append(one_community_info)
+    except KeyError:
+        print("Похоже, у искомого пользователя закрыта информация о сообществах")
     return output_communities_info
 
 
