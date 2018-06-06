@@ -24,9 +24,11 @@ import time
 
 import json
 
+import os
+
 from pprint import pprint
 
-from diploma_data import ACC_TOKEN, TARGET_VK, test_set
+from diploma_data import ACC_TOKEN, TARGET_VK
 
 
 def get_user_communities(token, vkid):
@@ -37,7 +39,7 @@ def get_user_communities(token, vkid):
             access_token=token,
             v="5.75",
             user_id=vkid,
-            count="50"
+            # count="50" # use to speed up testing
         )
     )
     return communities_list.json()
@@ -56,6 +58,7 @@ def get_community_info(token, *args):
     )
     return communities_info.json()
 
+
 def get_user_friends(token, vkid):
     print("Запрос списка друзей пользователя {}".format(vkid))
     friends_list = requests.get(
@@ -64,7 +67,7 @@ def get_user_friends(token, vkid):
             access_token=token,
             v="5.75",
             user_id=vkid,
-            count="50"
+            # count="50" # use to speed up testing
         )
     )
     return friends_list.json()
@@ -74,7 +77,6 @@ def compare_communities(token, vkid):
     user_communities = set(get_user_communities(token, vkid)["response"]["items"])
     user_friends = list(get_user_friends(token, vkid)["response"]["items"])
     user_friends_communities = []
-    counter = 1
     for friend in user_friends:
         try:
             user_friends_communities.append(set(
@@ -84,10 +86,58 @@ def compare_communities(token, vkid):
             print("Запрос сообществ пользователя {} завершился неудачей.\n"
                   "Возможно, настройки приватности".format(friend))
             continue
+    print("Идет сравнение списков сообществ...")
     for community_set in user_friends_communities:
-        print("Сравнение списков сообществ, шаг {}".format(counter))
         user_communities -= community_set
-        counter += 1
     return user_communities
 
-pprint(get_community_info(ACC_TOKEN, test_set))
+
+def prepare_data(communities_info):
+    output_communities_info = {"unique_communities":[]}
+    for one_community_info in communities_info["response"]:
+        del one_community_info["is_closed"]
+        del one_community_info["photo_50"]
+        del one_community_info["photo_100"]
+        del one_community_info["photo_200"]
+        del one_community_info["screen_name"]
+        del one_community_info["type"]
+        output_communities_info["unique_communities"].append(one_community_info)
+    return output_communities_info
+
+
+def write_to_file(data):
+    if os.path.isfile("groups.json"):
+        with open("groups.json", "a") as f:
+            json.dump(data, f, ensure_ascii=False)
+    else:
+        with open("groups.json", "w") as f:
+            json.dump(data, f, ensure_ascii=False)
+
+
+if __name__ == "__main__":
+    answer = ""
+    user_id = None
+    while answer.lower() != "q":
+        answer = input("Эта программа поможет узнать, в каких сообществах "
+                       "ВК состоит пользователь, но не состоит никто из его "
+                       "друзей\nВведите spygame, чтобы проверить пользователя,"
+                       " или q, чтобы выйти\n")
+        if answer.lower() == "spygame":
+            user_id = input("Введите id пользователя для проверки или нажмите "
+                            "enter для того чтобы проверить https://vk.com/"
+                            "tim_leary\n")
+            if user_id:
+                user_communities = compare_communities(ACC_TOKEN, user_id)
+            else:
+                user_communities = compare_communities(ACC_TOKEN, TARGET_VK)
+            unique_communities = get_community_info(ACC_TOKEN, user_communities)
+            output_data = prepare_data(unique_communities)
+            write_to_file(output_data)
+            answer = input("Результаты были записаны в файл groups.json.\n"
+                              "Если хотите вывести их на экран - введите print\n"
+                              "Если хотите повторить сначала - нажмите enter\n"
+                              "Если хотите завершить выполнение - введите q\n")
+            if show_data.lower() == "print":
+                pprint(output_data)
+        else:
+            continue
