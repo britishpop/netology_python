@@ -84,7 +84,7 @@ def compare_communities(token, vkid):
             time.sleep(0.38)
         except KeyError:
             print("Запрос сообществ пользователя {} завершился неудачей.\n"
-                  "Возможно, настройки приватности".format(friend))
+                  "Возможно, настройки приватности или блокировка".format(friend))
             continue
     print("Идет сравнение списков сообществ...")
     for community_set in user_friends_communities:
@@ -137,7 +137,7 @@ if __name__ == "__main__":
                               "Если хотите вывести их на экран - введите print\n"
                               "Если хотите повторить сначала - нажмите enter\n"
                               "Если хотите завершить выполнение - введите q\n")
-            if show_data.lower() == "print":
+            if answer.lower() == "print":
                 pprint(output_data)
         else:
             continue
