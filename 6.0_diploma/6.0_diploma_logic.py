@@ -45,14 +45,15 @@ def get_user_communities(token, vkid):
     return communities_list.json()
 
 
-def get_community_info(token, *args):
+def get_community_info(token, *group_ids):
     print("Запрос информации об уникальных сообществах")
+    groups_list = ",".join([str(item) for item in group_ids[0]])
     communities_info = requests.get(
         "https://api.vk.com/method/groups.getById",
         params=dict(
             access_token=token,
             v="5.75",
-            group_ids="{}".format(args),
+            group_ids="{}".format(groups_list),
             fields="members_count"
         )
     )
@@ -77,7 +78,12 @@ def compare_communities(token, vkid):
     user_communities = set(get_user_communities(token, vkid)["response"]["items"])
     user_friends = list(get_user_friends(token, vkid)["response"]["items"])
     user_friends_communities = []
+    count = len(user_friends)
+    print("У пользователя {} друзей. Сейчас мы запросим их сообщества"
+          .format(count))
     for friend in user_friends:
+        print("Осталось опросить {} профилей".format(count))
+        count -= 1
         try:
             user_friends_communities.append(set(
                 get_user_communities(token, friend)["response"]["items"]))
