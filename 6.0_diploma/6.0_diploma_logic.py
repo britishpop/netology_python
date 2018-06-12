@@ -116,11 +116,11 @@ def prepare_data(communities_info):
 
 def write_to_file(data):
     if os.path.isfile("groups.json"):
-        with open("groups.json", "a") as f:
-            json.dump(data, f, ensure_ascii=False)
+        with open("groups.json", "a", encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
     else:
-        with open("groups.json", "w") as f:
-            json.dump(data, f, ensure_ascii=False)
+        with open("groups.json", "w", encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
