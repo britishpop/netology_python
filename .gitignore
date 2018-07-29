@@ -1,3 +1,5 @@
 yob*.txt
 *.css
 *.sql
+**/__pycache__
+**/Migrations
